@@ -9,9 +9,12 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.BIND_VPN_SERVICE"/>
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <application>
 
+        <!-- VPN Service â€” monitors network traffic -->
         <service
             android:name="org.unphishable.sdk.core.UnphishableVpnService"
             android:exported="false"
@@ -22,6 +25,7 @@
             </intent-filter>
         </service>
 
+        <!-- Notification Listener â€” reads SMS and WhatsApp notification previews -->
         <service
             android:name="org.unphishable.sdk.core.UnphishableNotificationListener"
             android:exported="true"
@@ -31,12 +35,23 @@
             </intent-filter>
         </service>
 
+        <!-- Full Screen Alert Activity â€” shown when threat is detected -->
+        <activity
+            android:name="org.unphishable.sdk.ui.UnphishableAlertActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"/>
+
+        <!-- Broadcast Receiver â€” handles Block & Report and Continue actions -->
         <receiver
             android:name="org.unphishable.sdk.ui.UnphishableActionReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="org.unphishable.sdk.ACTION_PROCEED"/>
-                <action android:name="org.unphishable.sdk.ACTION_GO_BACK"/>
+                <action android:name="org.unphishable.sdk.ACTION_BLOCK_REPORT"/>
             </intent-filter>
         </receiver>
 
